@@ -1,9 +1,9 @@
 #include <iostream>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <filesystem>
 
 #include "shader.h"
+#include "mesh.h"
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -41,30 +41,8 @@ int main() {
     glViewport(0, 0, 800, 600);
     glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
 
-    float verteces[] = {
-        -0.5f, -0.5f, 0.0f,
-         0.5f, -0.5f, 0.0f,
-         0.0f,  0.5f, 0.0f 
-    };
-
-    // Upload vertex data to GPU(VBO)
-    unsigned int VBO;
-    glGenBuffers(1, &VBO);
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(verteces), verteces, GL_STATIC_DRAW);
-
-    // Shader setup
     Shader shader("shaders/triangle.glsl");
-
-    // Data layout (VAO)
-    unsigned int VAO;
-    glGenVertexArrays(1, &VAO);
-    glBindVertexArray(VAO);
-
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-    glEnableVertexAttribArray(0);
-
+    Mesh triangle({ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f });
 
     // Render Loop
     while (!glfwWindowShouldClose(window)) {
@@ -76,8 +54,7 @@ int main() {
         glClear(GL_COLOR_BUFFER_BIT);
 
         shader.use();
-        glBindVertexArray(VAO);
-        glDrawArrays(GL_TRIANGLES, 0, 3);
+        triangle.draw();
 
         // Event call and Buffer swap
         glfwSwapBuffers(window);

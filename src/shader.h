@@ -4,7 +4,6 @@ class Shader {
     public:
         Shader(const char* filepath);
         ~Shader();
-        
         Shader(const Shader&) = delete;
         Shader& operator=(const Shader&) = delete;
 

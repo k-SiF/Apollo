@@ -13,7 +13,7 @@ FetchContent_MakeAvailable(glfw)
 add_library(glad STATIC thirdparty/glad/src/gl.c)
 target_include_directories(glad PUBLIC thirdparty/glad/include)
 
-add_executable(apollo src/main.cpp src/shader.cpp)
+add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp)
 target_link_libraries(apollo PRIVATE glfw glad)
 
 add_custom_command(TARGET apollo POST_BUILD
