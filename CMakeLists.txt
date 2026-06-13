@@ -10,11 +10,18 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(glfw)
 
+FetchContent_Declare(
+    glm
+    GIT_REPOSITORY https://github.com/g-truc/glm.git
+    GIT_TAG 1.0.1
+)
+FetchContent_MakeAvailable(glm)
+
 add_library(glad STATIC thirdparty/glad/src/gl.c)
 target_include_directories(glad PUBLIC thirdparty/glad/include)
 
-add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp src/window.cpp)
-target_link_libraries(apollo PRIVATE glfw glad)
+add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp src/window.cpp src/entity.cpp)
+target_link_libraries(apollo PRIVATE glfw glad glm)
 target_compile_definitions(apollo PRIVATE GLFW_INCLUDE_NONE)
 
 add_custom_command(TARGET apollo POST_BUILD

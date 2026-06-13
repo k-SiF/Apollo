@@ -5,13 +5,16 @@
 #include "shader.h"
 #include "mesh.h"
 #include "window.h"
+#include "entity.h"
 
-void processInput(GLFWwindow* window, float& offsetx, float& offsety, float deltaTime) {
-    if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) glfwSetWindowShouldClose(window, true);
-    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) offsety += 0.5 * deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) offsetx -= 0.5 * deltaTime;    
-    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) offsety -= 0.5 * deltaTime;
-    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) offsetx += 0.5 * deltaTime;
+void processInput(GLFWwindow* window, Entity& entity, float deltaTime) {
+    float speed = 0.5f;
+    glm::vec2 pos = entity.getPosition();
+    if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) pos.y += 0.5 * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) pos.x -= 0.5 * deltaTime;    
+    if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) pos.y -= 0.5 * deltaTime;
+    if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) pos.x += 0.5 * deltaTime;
+    entity.setPosition(pos);
 }
 
 int main() {
@@ -20,9 +23,9 @@ int main() {
    
     Window window(800, 600, "Apollo");
     Shader shader("shaders/triangle.glsl");
-    Mesh triangle({ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f });
+    Mesh triangleMesh({ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f });
+    Entity entity(&triangleMesh);
 
-    float offsetX = 0, offsetY = 0;
     // Render Loop
     while (!window.shouldClose()) {
         // Delta time setup
@@ -31,16 +34,16 @@ int main() {
         lastFrame = currentFrame;
     
         // Input
-        processInput(window.handle(), offsetX, offsetY, deltaTime);
+        processInput(window.handle(), entity, deltaTime);
 
         // Rendering commands
         glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
+        entity.update(deltaTime);
+
         shader.use();
-        shader.setVec2("uOffset", offsetX, offsetY);
-        triangle.draw();
-        
+        entity.draw(shader);
 
         // Event call and Buffer swap
         window.swapBuffers();
