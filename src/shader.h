@@ -10,6 +10,8 @@ class Shader {
         void use() const;
         unsigned int compile(unsigned int type, const std::string& source);
 
+        void setVec2(const char* name, float x, float y) const;
+
 
     private:
         unsigned int m_id = 0;
