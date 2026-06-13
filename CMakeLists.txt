@@ -25,7 +25,8 @@ add_library(apollo_engine
     engine/src/window.cpp
     engine/src/shader.cpp
     engine/src/mesh.cpp
-    engine/src/entity.cpp)
+    engine/src/entity.cpp
+    engine/src/input.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here

@@ -2,16 +2,17 @@
 #include <apollo/shader.h>
 #include <apollo/mesh.h>
 #include <apollo/entity.h>
+#include <apollo/input.h>
 
-// void processInput(GLFWwindow* window, Entity& entity, float deltaTime) {
-//     float speed = 0.5f;
-//     glm::vec2 pos = entity.getPosition();
-//     if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) pos.y += 0.5 * deltaTime;
-//     if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) pos.x -= 0.5 * deltaTime;    
-//     if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) pos.y -= 0.5 * deltaTime;
-//     if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) pos.x += 0.5 * deltaTime;
-//     entity.setPosition(pos);
-// }
+void processInput(Entity& entity, float deltaTime) {
+    float speed = 0.5f;
+    glm::vec2 pos = entity.getPosition();
+    if (Input::onKeyPress(Key::Up)) pos.y += 0.5 * deltaTime;
+    if (Input::onKeyPress(Key::Left)) pos.x -= 0.5 * deltaTime;    
+    if (Input::onKeyPress(Key::Down)) pos.y -= 0.5 * deltaTime;
+    if (Input::onKeyPress(Key::Right)) pos.x += 0.5 * deltaTime;
+    entity.setPosition(pos);
+}
 
 int main() {
 
@@ -30,7 +31,7 @@ int main() {
         lastFrame = currentFrame;
     
         // Input
-        // processInput(window.handle(), entity, deltaTime);
+        processInput(entity, deltaTime);
 
         // Rendering commands
         window.clear(0.2f, 0.3f, 0.3f, 1.0f); // clear buffer, replace values.
