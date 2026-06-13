@@ -13,6 +13,8 @@ class Entity {
 
         glm::vec2 getPosition() const { return m_position; }
         void setPosition(glm::vec2 position) { m_position = position; }
+        Mesh* getMesh() const { return m_mesh; }
+        void setMesh(Mesh* mesh) { m_mesh = mesh; }
     
     private:
         glm::vec2 m_position;

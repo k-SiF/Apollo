@@ -14,6 +14,6 @@ class Input {
         static void setKeyState(Key key, bool pressed);
         
     private:
-        static bool s_current[10];
-        static bool s_previous[10];
+        static bool s_current[static_cast<int>(Key::Count)];
+        static bool s_previous[static_cast<int>(Key::Count)];
 };

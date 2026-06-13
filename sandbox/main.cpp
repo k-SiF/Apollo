@@ -3,6 +3,8 @@
 #include <apollo/mesh.h>
 #include <apollo/entity.h>
 #include <apollo/input.h>
+#include <apollo/renderer.h>
+#include <iostream>
 
 void processInput(Entity& entity, float deltaTime) {
     float speed = 0.5f;
@@ -11,6 +13,7 @@ void processInput(Entity& entity, float deltaTime) {
     if (Input::onKeyPress(Key::Left)) pos.x -= 0.5 * deltaTime;    
     if (Input::onKeyPress(Key::Down)) pos.y -= 0.5 * deltaTime;
     if (Input::onKeyPress(Key::Right)) pos.x += 0.5 * deltaTime;
+    // if (Input::onKeyRelease(Key::Space)) std::cout << "Jump!!" << std::endl;
     entity.setPosition(pos);
 }
 
@@ -22,6 +25,7 @@ int main() {
     Shader shader("shaders/triangle.glsl");
     Mesh triangleMesh({ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f });
     Entity entity(&triangleMesh);
+    Renderer renderer;
 
     // Render Loop
     while (!window.shouldClose()) {
@@ -34,11 +38,11 @@ int main() {
         processInput(entity, deltaTime);
 
         // Rendering commands
-        window.clear(0.2f, 0.3f, 0.3f, 1.0f); // clear buffer, replace values.
+        renderer.clear(0.2f, 0.3f, 0.3f, 1.0f); // clear buffer, replace values.
+        renderer.begin(shader);
 
         entity.update(deltaTime);
-        shader.use();
-        entity.draw(shader);
+        renderer.draw(entity);
 
         // Event call and Buffer swap
         window.swapBuffers();

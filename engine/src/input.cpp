@@ -1,7 +1,7 @@
 #include <apollo/input.h>
 
-bool Input::s_current[10] = { false };
-bool Input::s_previous[10] = { false };
+bool Input::s_current[static_cast<int>(Key::Count)] = { false };
+bool Input::s_previous[static_cast<int>(Key::Count)] = { false };
 
 bool Input::onKeyPress(Key key) {
     return s_current[static_cast<int>(key)];
@@ -18,7 +18,7 @@ bool Input::wasKeyPressed(Key key) {
 }
 
 void Input::update() {
-    for (int i = 0; i < 10; i++) {
+    for (int i = 0; i < static_cast<int>(Key::Count); i++) {
         s_previous[i] = s_current[i];
     }
 }
