@@ -2,6 +2,7 @@
 
 #include<iostream>
 #include <glad/gl.h>
+#include <GLFW/glfw3.h>
 
 void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
     glViewport(0, 0, width, height);
@@ -39,12 +40,22 @@ Window::~Window() {
     glfwTerminate();
 }
 
+void Window::clear(float r, float g, float b, float a) {
+    glClearColor(r, g, b, a);
+    glClear(GL_COLOR_BUFFER_BIT);
+}
+
+
 void Window::swapBuffers() {
     glfwSwapBuffers(m_window);
 }
 
 void Window::pollEvents() {
     glfwPollEvents();
+}
+
+float Window::getTime() const {
+    return static_cast<float>(glfwGetTime());
 }
 
 bool Window::shouldClose() const {

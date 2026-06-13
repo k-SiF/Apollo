@@ -1,5 +1,5 @@
 #pragma once
-#include <GLFW/glfw3.h>
+struct GLFWwindow;
 
 class Window {
     public:
@@ -11,6 +11,8 @@ class Window {
         bool shouldClose() const;
         void swapBuffers();
         void pollEvents();
+        void clear(float r, float g, float b, float a = 1.0f);
+        float getTime() const;
         GLFWwindow* handle() const { return m_window; }
 
     private:

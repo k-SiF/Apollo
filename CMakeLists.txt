@@ -20,10 +20,25 @@ FetchContent_MakeAvailable(glm)
 add_library(glad STATIC thirdparty/glad/src/gl.c)
 target_include_directories(glad PUBLIC thirdparty/glad/include)
 
-add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp src/window.cpp src/entity.cpp)
-target_link_libraries(apollo PRIVATE glfw glad glm)
-target_compile_definitions(apollo PRIVATE GLFW_INCLUDE_NONE)
+# --- Engine library ---
+add_library(apollo_engine
+    engine/src/window.cpp
+    engine/src/shader.cpp
+    engine/src/mesh.cpp
+    engine/src/entity.cpp)
 
-add_custom_command(TARGET apollo POST_BUILD
+target_include_directories(apollo_engine
+    PUBLIC engine/include           # users see headers under here
+    PRIVATE engine/include/apollo)  # engine's own .cpp can use short includes
+
+target_link_libraries(apollo_engine PRIVATE glfw glad)
+target_link_libraries(apollo_engine PUBLIC glm)
+target_compile_definitions(apollo_engine PRIVATE GLFW_INCLUDE_NONE)
+    
+# --- Sandbox ---
+add_executable(sandbox sandbox/main.cpp)
+target_link_libraries(sandbox PRIVATE apollo_engine)
+
+add_custom_command(TARGET sandbox POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
-    ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:apollo>/shaders)
+    ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:sandbox>/shaders)
