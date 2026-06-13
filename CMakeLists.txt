@@ -13,8 +13,9 @@ FetchContent_MakeAvailable(glfw)
 add_library(glad STATIC thirdparty/glad/src/gl.c)
 target_include_directories(glad PUBLIC thirdparty/glad/include)
 
-add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp)
+add_executable(apollo src/main.cpp src/shader.cpp src/mesh.cpp src/window.cpp)
 target_link_libraries(apollo PRIVATE glfw glad)
+target_compile_definitions(apollo PRIVATE GLFW_INCLUDE_NONE)
 
 add_custom_command(TARGET apollo POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory

@@ -1,0 +1,53 @@
+#include "window.h"
+
+#include<iostream>
+#include <glad/gl.h>
+
+void framebuffer_size_callback(GLFWwindow* window, int width, int height) {
+    glViewport(0, 0, width, height);
+}
+
+Window::Window(int width, int height, const char* title) {
+    if (!glfwInit()) {
+        std::cout << "Failed to initialise GLFW" << std::endl;
+        return;
+    }
+
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+    glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+
+    m_window = glfwCreateWindow(width, height, title, NULL, NULL);
+    if (m_window == NULL) {
+        std::cout << "Failed to create GLFW window." << std::endl;
+        glfwTerminate();
+        return;
+    }
+    glfwMakeContextCurrent(m_window);
+
+    if (!gladLoadGL(glfwGetProcAddress)) {
+        std::cout << "Failed to initialise GLAD" << std::endl;
+        return;
+    }
+
+    glViewport(0, 0, width, height);
+    glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
+}
+
+Window::~Window() {
+    glfwDestroyWindow(m_window);
+    glfwTerminate();
+}
+
+void Window::swapBuffers() {
+    glfwSwapBuffers(m_window);
+}
+
+void Window::pollEvents() {
+    glfwPollEvents();
+}
+
+bool Window::shouldClose() const {
+    return glfwWindowShouldClose(m_window);
+}
+
