@@ -1,7 +1,5 @@
 #pragma once
-#include "mesh.h"
-#include "shader.h"
-
+#include <apollo/mesh.h>
 #include <glm/glm.hpp>
 
 class Entity {
@@ -9,7 +7,6 @@ class Entity {
         Entity(Mesh* mesh, glm::vec2 position = glm::vec2(0.0f));
         ~Entity();
         void update(float deltaTime);
-        void draw(Shader& shader);
 
         glm::vec2 getPosition() const { return m_position; }
         void setPosition(glm::vec2 position) { m_position = position; }

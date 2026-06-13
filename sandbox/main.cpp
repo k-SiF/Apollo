@@ -5,6 +5,7 @@
 #include <apollo/input.h>
 #include <apollo/renderer.h>
 #include <iostream>
+#include <apollo/scene.h>
 
 void processInput(Entity& entity, float deltaTime) {
     float speed = 0.5f;
@@ -20,12 +21,14 @@ void processInput(Entity& entity, float deltaTime) {
 int main() {
 
     float lastFrame = 0.0f;
-   
     Window window(800, 600, "Apollo");
     Shader shader("shaders/triangle.glsl");
     Mesh triangleMesh({ -0.5f, -0.5f, 0.0f, 0.5f, -0.5f, 0.0f, 0.0f, 0.5f, 0.0f });
-    Entity entity(&triangleMesh);
     Renderer renderer;
+   
+    Scene scene;
+    Entity* e = scene.addEntity(&triangleMesh);
+    scene.addEntity(&triangleMesh, glm::vec2(0.5f, 0.0f));
 
     // Render Loop
     while (!window.shouldClose()) {
@@ -33,17 +36,16 @@ int main() {
         float currentFrame = window.getTime(); // Time since GLFW init
         float deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+        scene.update(deltaTime);
     
-        // Input
-        processInput(entity, deltaTime);
-
         // Rendering commands
         renderer.clear(0.2f, 0.3f, 0.3f, 1.0f); // clear buffer, replace values.
         renderer.begin(shader);
-
-        entity.update(deltaTime);
-        renderer.draw(entity);
-
+        scene.draw(renderer);
+        
+        // Input
+        processInput(*e, deltaTime);
+        
         // Event call and Buffer swap
         window.swapBuffers();
         window.pollEvents();
