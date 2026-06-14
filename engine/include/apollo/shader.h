@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <glm/gtc/matrix_transform.hpp> 
 
 class Shader {
     public:
@@ -12,6 +13,7 @@ class Shader {
         unsigned int compile(unsigned int type, const std::string& source);
 
         void setVec2(const char* name, float x, float y) const;
+        void setMat4(const char* name, glm::mat4& matrix) const;
 
 
     private:

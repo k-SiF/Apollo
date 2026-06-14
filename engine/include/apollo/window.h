@@ -15,6 +15,9 @@ class Window {
         float getTime() const;
         GLFWwindow* handle() const { return m_window; }
 
+        int getWidth() const;
+        int getHeight() const;
+
     private:
         GLFWwindow* m_window = nullptr;
 };

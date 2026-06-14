@@ -11,9 +11,13 @@ void Renderer::clear(float r, float g, float b, float a) {
     glClear(GL_COLOR_BUFFER_BIT);
 }
 
-void Renderer::begin(Shader &shader) {
+void Renderer::begin(Shader &shader, int width, int height) {
     m_shader = &shader;
     m_shader->use();
+
+    float aspect = (float)width / (float)height;
+    m_projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
+    m_shader->setMat4("uProjection", m_projection);
 }
 
 void Renderer::draw(Entity &entity) {
@@ -22,6 +26,6 @@ void Renderer::draw(Entity &entity) {
         return;
     }
     glm::vec2 pos = entity.getPosition();
-    m_shader->setVec2("uOffset", pos.x, pos.y);
+    m_shader->setMat4("uModel", entity.getModelMatrix());
     entity.getMesh()->draw();
 }

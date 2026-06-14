@@ -16,7 +16,7 @@ void Sketch::run() {
 
         // Rendering commands
         m_renderer.clear(m_bgR, m_bgG, m_bgR, 1.0f); // clear buffer, replace values.
-        m_renderer.begin(m_shader);
+        m_renderer.begin(m_shader, m_window.getWidth(), m_window.getHeight());
         m_scene.draw(m_renderer);
 
         // Event call and Buffer swap

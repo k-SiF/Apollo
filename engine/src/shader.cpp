@@ -87,3 +87,12 @@ void Shader::setVec2(const char *name, float x, float y) const {
     glUniform2f(location, x, y);    
 }
 
+void Shader::setMat4(const char* name, glm::mat4& matrix) const {
+    int location = glGetUniformLocation(m_id, name);
+    if (location == -1) {
+        std::cout << "Uniform not found: " << name << std::endl;
+        return;
+    }
+    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+}
+

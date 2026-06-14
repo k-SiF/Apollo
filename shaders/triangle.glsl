@@ -1,9 +1,10 @@
 #shader vertex
 #version 330 core
 layout (location = 0) in vec3 aPos;
-uniform vec2 uOffset;
+uniform mat4 uModel;
+uniform mat4 uProjection;
 void main() {
-    gl_Position = vec4(aPos.xy + uOffset, aPos.z, 1.0);
+    gl_Position = uProjection * uModel * vec4(aPos, 1.0);
 }
 
 #shader fragment

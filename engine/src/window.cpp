@@ -78,6 +78,18 @@ void Window::pollEvents() {
     glfwPollEvents();
 }
 
+int Window::getWidth() const { 
+    int w, h;
+    glfwGetFramebufferSize(m_window, &w, &h);
+    return w; 
+}
+
+int Window::getHeight() const { 
+    int w, h;
+    glfwGetFramebufferSize(m_window, &w, &h);
+    return h; 
+}
+
 float Window::getTime() const {
     return static_cast<float>(glfwGetTime());
 }
