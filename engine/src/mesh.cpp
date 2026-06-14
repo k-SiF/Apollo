@@ -2,6 +2,23 @@
 
 #include <glad/gl.h>
 
+Mesh::Mesh(Mesh&& other) noexcept 
+    : m_vao(other.m_vao), m_vbo(other.m_vbo), m_vertexCount(other.m_vertexCount) {
+        other.m_vao = 0;
+        other.m_vbo = 0;
+        other.m_vertexCount = 0;
+}
+
+Mesh& Mesh::operator=(Mesh&& other) noexcept {
+    if (this != &other) {
+        glDeleteVertexArrays(1, &m_vao);
+        glDeleteBuffers(1, &m_vbo);
+        m_vao = other.m_vao; m_vbo = other.m_vbo; m_vertexCount = other.m_vertexCount;
+        other.m_vao = 0; other.m_vbo = 0; other.m_vertexCount = 0;
+    }
+    return *this;
+}
+
 Mesh::Mesh(const std::vector<float>& vertices) {
     m_vertexCount = static_cast<int>(vertices.size() / 3);
 
@@ -27,4 +44,21 @@ Mesh::~Mesh() {
 void Mesh::draw() const {
     glBindVertexArray(m_vao);
     glDrawArrays(GL_TRIANGLES, 0, m_vertexCount);
+}
+
+Mesh Mesh::createTriangle() {
+    return Mesh({ -0.5f, -0.5f, 0.0f,
+                   0.5f, -0.5f, 0.0f,
+                   0.0f,  0.5f, 0.0f });
+}
+
+Mesh Mesh::createQuad() {
+    return Mesh({
+        -0.5f, -0.5f, 0.0f,
+         0.5f, -0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,
+        -0.5f, -0.5f, 0.0f,
+         0.5f,  0.5f, 0.0f,
+        -0.5f,  0.5f, 0.0f
+    });
 }

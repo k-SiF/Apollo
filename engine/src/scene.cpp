@@ -1,5 +1,7 @@
 #include "scene.h"
 
+#include <apollo/renderer.h> 
+
 Entity* Scene::addEntity(Mesh *mesh, glm::vec2 position) {
     auto entity = std::make_unique<Entity>(mesh, position); // unique pointer
     Entity* ptr = entity.get();                             // borrow raw pointer

@@ -28,7 +28,9 @@ add_library(apollo_engine
     engine/src/entity.cpp
     engine/src/input.cpp
     engine/src/renderer.cpp
-    engine/src/scene.cpp)
+    engine/src/scene.cpp
+    engine/src/sketch.cpp
+    engine/src/entry.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here
@@ -39,7 +41,7 @@ target_link_libraries(apollo_engine PUBLIC glm)
 target_compile_definitions(apollo_engine PRIVATE GLFW_INCLUDE_NONE)
     
 # --- Sandbox ---
-add_executable(sandbox sandbox/main.cpp)
+add_executable(sandbox sandbox/main.cpp sandbox/game.cpp sandbox/player.cpp)
 target_link_libraries(sandbox PRIVATE apollo_engine)
 
 add_custom_command(TARGET sandbox POST_BUILD

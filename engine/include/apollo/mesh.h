@@ -3,12 +3,16 @@
 
 class Mesh {
     public:
+        Mesh(Mesh&& other) noexcept;            // move constructor
+        Mesh& operator=(Mesh&& other) noexcept; // move assignment
         Mesh(const std::vector<float>& vertices);
         ~Mesh();
         Mesh(const Mesh&) = delete;
         Mesh& operator=(const Mesh&) = delete;
 
         void draw() const;
+        static Mesh Mesh::createTriangle();
+        static Mesh Mesh::createQuad();
 
     private:
         unsigned int m_vbo = 0;
