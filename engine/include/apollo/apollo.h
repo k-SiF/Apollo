@@ -8,3 +8,4 @@
 #include <apollo/sketch.h>
 #include <apollo/key.h>
 #include <apollo/chrono.h>
+#include <apollo/texture.h>

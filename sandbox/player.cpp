@@ -5,7 +5,7 @@
 #include <iostream>
 
 Player::Player(Mesh* mesh, glm::vec2 position) : Entity(mesh, position) {
-
+    setTexture(&tex);
 }
 
 void Player::update() {

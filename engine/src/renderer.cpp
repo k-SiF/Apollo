@@ -19,6 +19,7 @@ namespace apollo {
         float aspect = (float)width / (float)height;
         m_projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
         m_shader->setMat4("uProjection", m_projection);
+        m_shader->setInt("uTexture", 0);
     }
 
     void Renderer::draw(Entity &entity) {
@@ -28,6 +29,9 @@ namespace apollo {
         }
         glm::vec2 pos = entity.getPosition();
         m_shader->setMat4("uModel", entity.getModelMatrix());
+        if (entity.getTexture()) {
+            entity.getTexture()->bind(0);
+        }
         entity.getMesh()->draw();
     }
 }

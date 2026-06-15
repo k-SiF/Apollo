@@ -1,5 +1,6 @@
 #pragma once
 #include <apollo/mesh.h>
+#include <apollo/texture.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
 
@@ -21,6 +22,8 @@ namespace apollo {
             }
             Mesh* getMesh() const { return m_mesh; }
             void setMesh(Mesh* mesh) { m_mesh = mesh; }
+            Texture* getTexture() const { return m_tex; }
+            void setTexture(Texture* tex) { m_tex = tex; }
             
             glm::mat4 getModelMatrix() const;
         
@@ -28,6 +31,7 @@ namespace apollo {
             glm::vec2 m_position;
             glm::vec2 m_scale = glm::vec2(1.0f);
             float m_rotation = 0.0f;
-            Mesh* m_mesh;
+            Mesh* m_mesh = nullptr;
+            Texture* m_tex = nullptr;
     }; 
 } 

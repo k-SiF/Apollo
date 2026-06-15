@@ -21,7 +21,7 @@ namespace apollo {
     }
 
     Mesh::Mesh(const std::vector<float>& vertices) {
-        m_vertexCount = static_cast<int>(vertices.size() / 3);
+        m_vertexCount = static_cast<int>(vertices.size() / 5);
 
         // Upload vertex data to GPU(VBO)
         glGenBuffers(1, &m_vbo);
@@ -33,8 +33,14 @@ namespace apollo {
         glBindVertexArray(m_vao);
 
         glBindBuffer(GL_ARRAY_BUFFER, m_vbo);
-        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+        // Position attribute (location 0): 3 floats, starting at offset 0
+        glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
         glEnableVertexAttribArray(0);
+
+        // UV attribute (location 1): 2 floats, starting after the 3 position floats
+        glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+        glEnableVertexAttribArray(1);
     }
 
     Mesh::~Mesh() {
@@ -49,18 +55,19 @@ namespace apollo {
 
     Mesh Mesh::createTriangle() {
         return Mesh({ -0.5f, -0.5f, 0.0f,
-                    0.5f, -0.5f, 0.0f,
-                    0.0f,  0.5f, 0.0f });
+                       0.5f, -0.5f, 0.0f,
+                       0.0f,  0.5f, 0.0f });
     }
 
     Mesh Mesh::createQuad() {
         return Mesh({
-            -0.5f, -0.5f, 0.0f,
-            0.5f, -0.5f, 0.0f,
-            0.5f,  0.5f, 0.0f,
-            -0.5f, -0.5f, 0.0f,
-            0.5f,  0.5f, 0.0f,
-            -0.5f,  0.5f, 0.0f
+            // positions (x, y, z) // UVs
+            -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom-left
+             0.5f, -0.5f, 0.0f,    1.0f, 0.0f,   // bottom-right
+             0.5f,  0.5f, 0.0f,    1.0f, 1.0f,   // top-right
+            -0.5f, -0.5f, 0.0f,    0.0f, 0.0f,   // bottom-left
+             0.5f,  0.5f, 0.0f,    1.0f, 1.0f,   // top-right
+            -0.5f,  0.5f, 0.0f,    0.0f, 1.0f    // top-left
         });
     }
 }

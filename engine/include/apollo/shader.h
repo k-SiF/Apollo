@@ -15,6 +15,7 @@ namespace apollo {
 
             void setVec2(const char* name, float x, float y) const;
             void setMat4(const char* name, glm::mat4& matrix) const;
+            void setInt(const char* name, int value) const;
 
 
         private:

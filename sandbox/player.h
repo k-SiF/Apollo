@@ -1,5 +1,6 @@
 #pragma once
 #include <apollo/entity.h>
+#include <apollo/texture.h>
 
 using namespace apollo;
 
@@ -17,4 +18,6 @@ class Player : public Entity {
         const float G = -9.81;
 
         bool m_jumping = false;
+
+        Texture tex{"assets/Cardicon.png"};
 };

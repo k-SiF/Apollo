@@ -31,20 +31,26 @@ add_library(apollo_engine
     engine/src/scene.cpp
     engine/src/sketch.cpp
     engine/src/entry.cpp
-    engine/src/chrono.cpp)
+    engine/src/chrono.cpp
+    engine/src/texture.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here
-    PRIVATE engine/include/apollo)  # engine's own .cpp can use short includes
+    PRIVATE engine/include/apollo thirdparty/stb)  # engine's own .cpp can use short includes
 
 target_link_libraries(apollo_engine PRIVATE glfw glad)
 target_link_libraries(apollo_engine PUBLIC glm)
 target_compile_definitions(apollo_engine PRIVATE GLFW_INCLUDE_NONE)
     
 # --- Sandbox ---
-add_executable(sandbox sandbox/main.cpp sandbox/game.cpp sandbox/player.cpp)
+file(GLOB SANDBOX_SOURCES CONFIGURE_DEPENDS sandbox/*.cpp)
+add_executable(sandbox ${SANDBOX_SOURCES})
 target_link_libraries(sandbox PRIVATE apollo_engine)
 
 add_custom_command(TARGET sandbox POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/shaders $<TARGET_FILE_DIR:sandbox>/shaders)
+
+add_custom_command(TARGET sandbox POST_BUILD
+    COMMAND ${CMAKE_COMMAND} -E copy_directory
+    ${CMAKE_SOURCE_DIR}/sandbox/assets $<TARGET_FILE_DIR:sandbox>/assets)

@@ -79,7 +79,16 @@ namespace apollo {
         glUseProgram(m_id);
     }
 
-    void Shader::setVec2(const char *name, float x, float y) const {
+    void Shader::setInt(const char* name, int value) const {
+        int loc = glGetUniformLocation(m_id, name);
+        if (loc == -1) { 
+            std::cout << "Uniform not found: " << name << std::endl;
+            return;
+        }
+        glUniform1i(loc, value);
+    }
+
+    void Shader::setVec2(const char* name, float x, float y) const {
         int location = glGetUniformLocation(m_id, name);
         if (location == -1) {
             std::cout << "Uniform not found: " << name << std::endl;
