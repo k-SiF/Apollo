@@ -1,5 +1,5 @@
 #include "game.h"
 
-Sketch* createSketch() {
+apollo::Sketch* createSketch() {
     return new Game;
 }

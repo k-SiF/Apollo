@@ -30,7 +30,8 @@ add_library(apollo_engine
     engine/src/renderer.cpp
     engine/src/scene.cpp
     engine/src/sketch.cpp
-    engine/src/entry.cpp)
+    engine/src/entry.cpp
+    engine/src/chrono.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here

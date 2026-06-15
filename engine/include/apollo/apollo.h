@@ -6,3 +6,5 @@
 #include <apollo/renderer.h>
 #include <apollo/scene.h>
 #include <apollo/sketch.h>
+#include <apollo/key.h>
+#include <apollo/chrono.h>

@@ -1,4 +1,5 @@
 #include "game.h"
+#include <iostream>
 
 Game::Game() {}
 
@@ -9,6 +10,6 @@ void Game::start() {
     setBackground(0.1f, 0.1f, 0.15f);
 }
 
-void Game::update(float deltaTime) {
-
+void Game::update() {
+    
 }

@@ -1,22 +1,25 @@
 #include "scene.h"
 
 #include <apollo/renderer.h> 
+#include <apollo/chrono.h>
 
-Entity* Scene::addEntity(Mesh *mesh, glm::vec2 position) {
-    auto entity = std::make_unique<Entity>(mesh, position); // unique pointer
-    Entity* ptr = entity.get();                             // borrow raw pointer
-    m_entities.push_back(std::move(entity));                // transfer pointer ownership
-    return ptr;
-}
-
-void Scene::update(float deltaTime) {
-    for (auto& entity : m_entities) {
-        entity->update(deltaTime);
+namespace apollo {
+    Entity* Scene::addEntity(Mesh *mesh, glm::vec2 position) {
+        auto entity = std::make_unique<Entity>(mesh, position); // unique pointer
+        Entity* ptr = entity.get();                             // borrow raw pointer
+        m_entities.push_back(std::move(entity));                // transfer pointer ownership
+        return ptr;
     }
-}
 
-void Scene::draw(Renderer& renderer) {
-    for (auto& entity : m_entities) {
-        renderer.draw(*entity);
+    void Scene::update() {
+        for (auto& entity : m_entities) {
+            entity->update();
+        }
+    }
+
+    void Scene::draw(Renderer& renderer) {
+        for (auto& entity : m_entities) {
+            renderer.draw(*entity);
+        }
     }
 }

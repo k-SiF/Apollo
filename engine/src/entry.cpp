@@ -1,9 +1,9 @@
 #include "sketch.h"
 
-extern Sketch* createSketch();
+extern apollo::Sketch* createSketch();
 
 int main() {
-    Sketch* sketch = createSketch();
+    apollo::Sketch* sketch = createSketch();
     sketch->run();
     delete sketch;
 }

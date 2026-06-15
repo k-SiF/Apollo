@@ -4,95 +4,96 @@
 #include <fstream>
 #include <glad/gl.h>
 
-Shader::Shader(const char* filepath) {
-    std::ifstream File(filepath);
+namespace apollo {
+    Shader::Shader(const char* filepath) {
+        std::ifstream File(filepath);
 
-    if (!File.is_open()) {
-        std::cout << "Failed to open Shader file: " << filepath << std::endl;
-        return;
-    }
-
-    std::string line;
-    bool vertexCheck = true;
-    std::string vertexSource, fragmentSource;
-    while (std::getline(File, line)) {
-        if (line.find("#shader") == 0) {
-            if (line.find("vertex") != std::string::npos) vertexCheck = true;
-            if (line.find("fragment") != std::string::npos) vertexCheck = false;
-        } else {
-            (vertexCheck ? vertexSource : fragmentSource) += line + '\n';
+        if (!File.is_open()) {
+            std::cout << "Failed to open Shader file: " << filepath << std::endl;
+            return;
         }
-    }   
-    File.close();
 
-    unsigned int vertexShader = compile(GL_VERTEX_SHADER, vertexSource);
-    unsigned int fragmentShader = compile(GL_FRAGMENT_SHADER, fragmentSource);
+        std::string line;
+        bool vertexCheck = true;
+        std::string vertexSource, fragmentSource;
+        while (std::getline(File, line)) {
+            if (line.find("#shader") == 0) {
+                if (line.find("vertex") != std::string::npos) vertexCheck = true;
+                if (line.find("fragment") != std::string::npos) vertexCheck = false;
+            } else {
+                (vertexCheck ? vertexSource : fragmentSource) += line + '\n';
+            }
+        }   
+        File.close();
 
-    m_id = glCreateProgram();
-    glAttachShader(m_id, vertexShader);
-    glAttachShader(m_id, fragmentShader);
-    glLinkProgram(m_id);
+        unsigned int vertexShader = compile(GL_VERTEX_SHADER, vertexSource);
+        unsigned int fragmentShader = compile(GL_FRAGMENT_SHADER, fragmentSource);
 
-    int success;
-    glGetProgramiv(m_id, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char log[512];
-        glGetProgramInfoLog(m_id, 521, nullptr, log);
-        std::cout << "Program link error: " << log << std::endl;
-    }
+        m_id = glCreateProgram();
+        glAttachShader(m_id, vertexShader);
+        glAttachShader(m_id, fragmentShader);
+        glLinkProgram(m_id);
 
-    glDeleteShader(vertexShader);
-    glDeleteShader(fragmentShader);
-}
-
-Shader::~Shader() {};
-
-unsigned int Shader::compile(unsigned int type, const std::string& source) {
-    unsigned int shader = glCreateShader(type);
-    const char* src = source.c_str();
-    glShaderSource(shader, 1, &src, nullptr);
-    glCompileShader(shader);
-
-    int success;
-    glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
-    if (!success) {
-        char log[512];
-        glGetShaderInfoLog(shader, 512, nullptr, log);
-        std::cout << "Shader compile error ("
-                  << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
-                  << "):" << log << std::endl;
-    }
-
-    return shader;
-}
-
-void Shader::use() const {
-    if (m_id == 0) {
-        static bool warned = false;
-        if (!warned) {
-            std::cout << "Shader::use() called on invalid shader!" << std::endl;
-            warned = true;
+        int success;
+        glGetProgramiv(m_id, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            char log[512];
+            glGetProgramInfoLog(m_id, 521, nullptr, log);
+            std::cout << "Program link error: " << log << std::endl;
         }
-        return;
-    }
-    glUseProgram(m_id);
-}
 
-void Shader::setVec2(const char *name, float x, float y) const {
-    int location = glGetUniformLocation(m_id, name);
-    if (location == -1) {
-        std::cout << "Uniform not found: " << name << std::endl;
-        return;
+        glDeleteShader(vertexShader);
+        glDeleteShader(fragmentShader);
     }
-    glUniform2f(location, x, y);    
-}
 
-void Shader::setMat4(const char* name, glm::mat4& matrix) const {
-    int location = glGetUniformLocation(m_id, name);
-    if (location == -1) {
-        std::cout << "Uniform not found: " << name << std::endl;
-        return;
+    Shader::~Shader() {};
+
+    unsigned int Shader::compile(unsigned int type, const std::string& source) {
+        unsigned int shader = glCreateShader(type);
+        const char* src = source.c_str();
+        glShaderSource(shader, 1, &src, nullptr);
+        glCompileShader(shader);
+
+        int success;
+        glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
+        if (!success) {
+            char log[512];
+            glGetShaderInfoLog(shader, 512, nullptr, log);
+            std::cout << "Shader compile error ("
+                    << (type == GL_VERTEX_SHADER ? "vertex" : "fragment")
+                    << "):" << log << std::endl;
+        }
+
+        return shader;
     }
-    glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
-}
 
+    void Shader::use() const {
+        if (m_id == 0) {
+            static bool warned = false;
+            if (!warned) {
+                std::cout << "Shader::use() called on invalid shader!" << std::endl;
+                warned = true;
+            }
+            return;
+        }
+        glUseProgram(m_id);
+    }
+
+    void Shader::setVec2(const char *name, float x, float y) const {
+        int location = glGetUniformLocation(m_id, name);
+        if (location == -1) {
+            std::cout << "Uniform not found: " << name << std::endl;
+            return;
+        }
+        glUniform2f(location, x, y);    
+    }
+
+    void Shader::setMat4(const char* name, glm::mat4& matrix) const {
+        int location = glGetUniformLocation(m_id, name);
+        if (location == -1) {
+            std::cout << "Uniform not found: " << name << std::endl;
+            return;
+        }
+        glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
+    }
+}
