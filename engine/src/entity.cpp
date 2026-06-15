@@ -1,9 +1,7 @@
-#include "entity.h"
+#include <apollo/entity.h>
 
 namespace apollo {
-    Entity::Entity(Mesh *mesh, glm::vec2 position) {
-        m_position = position;
-        m_mesh = mesh;
+    Entity::Entity(Mesh *mesh, glm::vec2 position) : m_position(position), m_mesh(mesh) {
     }
 
     Entity::~Entity() {

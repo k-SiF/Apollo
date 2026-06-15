@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.20)
+set(CMAKE_CXX_STANDARD 20)
 project(Apollo)
 
 include(FetchContent)
@@ -32,7 +33,8 @@ add_library(apollo_engine
     engine/src/sketch.cpp
     engine/src/entry.cpp
     engine/src/chrono.cpp
-    engine/src/texture.cpp)
+    engine/src/texture.cpp
+    engine/src/camera.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here

@@ -1,4 +1,4 @@
-#include "shader.h"
+#include <apollo/shader.h>
 
 #include <iostream>
 #include <fstream>
@@ -97,7 +97,7 @@ namespace apollo {
         glUniform2f(location, x, y);    
     }
 
-    void Shader::setMat4(const char* name, glm::mat4& matrix) const {
+    void Shader::setMat4(const char* name, const glm::mat4& matrix) const {
         int location = glGetUniformLocation(m_id, name);
         if (location == -1) {
             std::cout << "Uniform not found: " << name << std::endl;

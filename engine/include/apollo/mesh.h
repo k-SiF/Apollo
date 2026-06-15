@@ -12,8 +12,8 @@ namespace apollo {
             Mesh& operator=(const Mesh&) = delete;
 
             void draw() const;
-            static Mesh Mesh::createTriangle();
-            static Mesh Mesh::createQuad();
+            static Mesh createTriangle();
+            static Mesh createQuad();
 
         private:
             unsigned int m_vbo = 0;

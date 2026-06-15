@@ -1,5 +1,4 @@
-#include "sketch.h"
-
+#include <apollo/sketch.h>
 #include <apollo/chrono.h>
 
 namespace apollo {
@@ -21,7 +20,7 @@ namespace apollo {
 
             // Rendering commands
             m_renderer.clear(m_bgR, m_bgG, m_bgR, 1.0f); // clear buffer, replace values.
-            m_renderer.begin(m_shader, m_window.getWidth(), m_window.getHeight());
+            m_renderer.begin(m_shader, m_window.getWidth(), m_window.getHeight(), m_camera);
             m_scene.draw(m_renderer);
 
             // Event call and Buffer swap

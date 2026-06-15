@@ -11,6 +11,7 @@ class Game : public Sketch {
         void update() override;
 
     private:
+        Texture m_grassTexture { "assets/grass_palette.png" };
         Mesh m_quad = Mesh::createQuad();
         Player* m_player = nullptr;
         const float G = -9.81;

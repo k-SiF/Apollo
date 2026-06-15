@@ -1,4 +1,4 @@
-#include "mesh.h"
+#include <apollo/mesh.h>
 
 #include <glad/gl.h>
 

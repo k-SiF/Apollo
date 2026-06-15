@@ -9,3 +9,4 @@
 #include <apollo/key.h>
 #include <apollo/chrono.h>
 #include <apollo/texture.h>
+#include <apollo/camera.h>

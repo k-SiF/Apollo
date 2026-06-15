@@ -14,7 +14,7 @@ namespace apollo {
             unsigned int compile(unsigned int type, const std::string& source);
 
             void setVec2(const char* name, float x, float y) const;
-            void setMat4(const char* name, glm::mat4& matrix) const;
+            void setMat4(const char* name, const glm::mat4& matrix) const;
             void setInt(const char* name, int value) const;
 
 

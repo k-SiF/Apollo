@@ -1,6 +1,7 @@
 #pragma once
 #include <apollo/shader.h>
 #include <apollo/entity.h>
+#include <apollo/camera.h>
 #include <glm/gtc/matrix_transform.hpp> 
 
 namespace apollo {
@@ -9,7 +10,7 @@ namespace apollo {
             Renderer();
             ~Renderer();
             void clear(float r, float g, float b, float a);
-            void begin(Shader& shader, int width, int height);
+            void begin(Shader& shader, int width, int height, const Camera& camera);
             void draw(Entity& entity);
         
         private:

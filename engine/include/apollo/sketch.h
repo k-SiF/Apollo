@@ -2,6 +2,7 @@
 #include <apollo/window.h>
 #include <apollo/renderer.h>
 #include <apollo/scene.h>
+#include <apollo/camera.h>
 
 namespace apollo {
     class Sketch {
@@ -23,5 +24,6 @@ namespace apollo {
             Renderer m_renderer;
             Shader m_shader;
             Scene m_scene;
+            Camera m_camera;
     };
 }

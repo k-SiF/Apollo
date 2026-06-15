@@ -1,5 +1,4 @@
-#include "scene.h"
-
+#include <apollo/scene.h>
 #include <apollo/renderer.h> 
 #include <apollo/chrono.h>
 
@@ -15,6 +14,8 @@ namespace apollo {
         for (auto& entity : m_entities) {
             entity->update();
         }
+
+        std::erase_if(m_entities, [](const auto& e) { return !e->isAlive(); });
     }
 
     void Scene::draw(Renderer& renderer) {

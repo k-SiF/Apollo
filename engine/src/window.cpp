@@ -1,10 +1,10 @@
-#include "window.h"
+#include <apollo/window.h>
+#include <apollo/key.h>
+#include <apollo/input.h>
 
 #include<iostream>
 #include <glad/gl.h>
 #include <GLFW/glfw3.h>
-#include <apollo/key.h>
-#include <apollo/input.h>
 
 namespace apollo {
     static Key glfwToApolloKey(int glfwKey) {

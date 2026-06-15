@@ -11,6 +11,9 @@ namespace apollo {
             virtual ~Entity();
             virtual void update();
 
+            bool isAlive() const { return m_alive; }
+            void destroy() { m_alive = false; }
+
             glm::vec2 getPosition() const { return m_position; }
             void setPosition(glm::vec2 position) { m_position = position; }
             glm::vec2 getScale() const { return m_scale; }
@@ -33,5 +36,6 @@ namespace apollo {
             float m_rotation = 0.0f;
             Mesh* m_mesh = nullptr;
             Texture* m_tex = nullptr;
+            bool m_alive = true;
     }; 
 } 

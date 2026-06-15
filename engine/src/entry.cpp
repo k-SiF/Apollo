@@ -1,4 +1,4 @@
-#include "sketch.h"
+#include <apollo/sketch.h>
 
 extern apollo::Sketch* createSketch();
 

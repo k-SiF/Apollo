@@ -1,4 +1,4 @@
-#include "renderer.h"
+#include <apollo/renderer.h>
 
 #include <glad/gl.h>
 #include <iostream>
@@ -12,13 +12,14 @@ namespace apollo {
         glClear(GL_COLOR_BUFFER_BIT);
     }
 
-    void Renderer::begin(Shader &shader, int width, int height) {
+    void Renderer::begin(Shader &shader, int width, int height, const Camera& camera) {
         m_shader = &shader;
         m_shader->use();
 
         float aspect = (float)width / (float)height;
         m_projection = glm::ortho(-aspect, aspect, -1.0f, 1.0f, -1.0f, 1.0f);
         m_shader->setMat4("uProjection", m_projection);
+        m_shader->setMat4("uView", camera.getViewMatrix());
         m_shader->setInt("uTexture", 0);
     }
 
