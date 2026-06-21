@@ -14,18 +14,10 @@
 namespace apollo {
     static Key glfwToApolloKey(int glfwKey) {
         switch (glfwKey) {
-            case GLFW_KEY_W: return Key::W;
-            case GLFW_KEY_A: return Key::A;
-            case GLFW_KEY_S: return Key::S;
-            case GLFW_KEY_D: return Key::D;
-            case GLFW_KEY_L: return Key::L;
-            case GLFW_KEY_F11: return Key::F11;
-            case GLFW_KEY_UP:    return Key::Up;
-            case GLFW_KEY_DOWN:  return Key::Down;
-            case GLFW_KEY_LEFT:  return Key::Left;
-            case GLFW_KEY_RIGHT: return Key::Right;
-            case GLFW_KEY_SPACE:  return Key::Space;
-            case GLFW_KEY_ESCAPE: return Key::Esc;
+            #define APOLLO_KEY(name, glfwKey) case glfwKey: return Key::name;
+            #include <apollo/keys.def>
+            #undef APOLLO_KEY
+            
             default: return Key::Unknown;
         }
     }
