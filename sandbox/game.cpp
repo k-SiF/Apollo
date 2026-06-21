@@ -5,7 +5,9 @@
 Game::Game() {}
 
 void Game::start() {
-    m_player = m_scene.addEntity<Player>(&m_quad);
+    Texture* liya = m_resources.getTexture("assets/Liya_idle_1.png");
+    Texture* grass = m_resources.getTexture("assets/grass_palette.png");
+    m_player = m_scene.addEntity<Player>(&m_quad, liya);
     m_player->setPosition(glm::vec2(1.5f));
 
     setBackground(0.1f, 0.1f, 0.15f);
@@ -15,7 +17,7 @@ void Game::start() {
             marker = m_scene.addEntity<Entity>(&m_quad);
             marker->setPosition(glm::vec2(x, y));
             marker->setScale(glm::vec2(0.1f));
-            marker->setTexture(&m_grassTexture);
+            marker->setTexture(grass);
         }
     }
 }

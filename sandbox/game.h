@@ -12,7 +12,6 @@ class Game : public Sketch {
         void onRender(float alpha) override;
 
     private:
-        Texture m_grassTexture { "assets/grass_palette.png" };
         Mesh m_quad = Mesh::createQuad();
         Player* m_player = nullptr;
         Entity* marker = nullptr;
