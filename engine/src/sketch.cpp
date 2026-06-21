@@ -61,10 +61,7 @@ namespace apollo {
             m_window.swapBuffers();
             m_window.pollEvents();
 
-            if (Input::wasKeyPressed(Key::Esc)) m_window.close();
-
-            // const double TARGET = 1.0 / 120.0;
-            // while (m_window.getTime() - currentFrame < TARGET) { } 
+            if (Input::wasKeyPressed(Key::Escape)) m_window.close();
         }
     }
 }
