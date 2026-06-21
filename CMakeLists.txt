@@ -34,7 +34,8 @@ add_library(apollo_engine
     engine/src/entry.cpp
     engine/src/chrono.cpp
     engine/src/texture.cpp
-    engine/src/camera.cpp)
+    engine/src/camera.cpp
+    engine/src/resources.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here
