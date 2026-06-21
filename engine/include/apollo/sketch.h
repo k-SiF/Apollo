@@ -1,8 +1,5 @@
 #pragma once
-#include <apollo/window.h>
-#include <apollo/renderer.h>
-#include <apollo/scene.h>
-#include <apollo/camera.h>
+#include <apollo/apollo.h>
 
 namespace apollo {
     class Sketch {
@@ -29,5 +26,6 @@ namespace apollo {
             Shader m_shader;
             Scene m_scene;
             Camera m_camera;
+            Resources m_resources;
     };
 }
