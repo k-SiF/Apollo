@@ -2,13 +2,19 @@
 
 namespace apollo {
     float Time::s_deltaTime = 0.0f;
+    float Time::s_FIXEDTIME = 0.0f;
     float Time::s_elapsed = 0.0f;
 
     float Time::deltaTime() { return s_deltaTime; }
+    float Time::fixedTime() { return s_FIXEDTIME; }
     float Time::elapsed() { return s_elapsed; }
 
     void Time::update(float deltaTime) {
         s_deltaTime = deltaTime;
         s_elapsed += deltaTime;
+    }
+
+    void Time::fixedUpdate(float deltaTime) {
+        s_FIXEDTIME = deltaTime;
     }
 }
