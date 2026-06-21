@@ -6,7 +6,7 @@ using namespace apollo;
 
 class Player : public Entity {
     public:
-        Player(Mesh* mesh, glm::vec2 position = glm::vec2(0.0f));
+        Player(Mesh* mesh, Texture* texture, glm::vec2 position = glm::vec2(0.0f));
         void update(float deltaTime) override;
         void fixedUpdate(float deltaTime) override;
         void onCollision(Entity& other) override;
@@ -28,5 +28,5 @@ class Player : public Entity {
         glm::vec2 m_velocity = glm::vec2(SPEED, JUMP_FORCE);
         glm::vec2 m_prevPos = glm::vec2(0.0f);
 
-        Texture tex{"assets/Liya_idle_1.png"};
+        Texture* m_texture = nullptr;
 };
