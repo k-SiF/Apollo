@@ -9,11 +9,17 @@ namespace apollo {
             Window(const Window&) = delete;
             Window& operator=(const Window&) = delete;
 
+            void setFullscreen(bool fullscreen);
+            bool isFullscreen() const { return m_fullscreen; }
+            void toggleFullscreen() { setFullscreen(!m_fullscreen); }
+            void applyVSync() const;
+
             bool shouldClose() const;
+            void close() const;
             void swapBuffers();
             void pollEvents();
             void clear(float r, float g, float b, float a = 1.0f);
-            float getTime() const;
+            double getTime() const;
             GLFWwindow* handle() const { return m_window; }
 
             int getWidth() const;
@@ -21,5 +27,9 @@ namespace apollo {
 
         private:
             GLFWwindow* m_window = nullptr;
+            int m_windowedWidth = 800;
+            int m_windowedHeight = 600;
+            int m_windowedX = 100, m_windowedY = 100;
+            bool m_fullscreen = false;
     };
 }
