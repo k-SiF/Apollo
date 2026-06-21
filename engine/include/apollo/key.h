@@ -2,11 +2,9 @@
 
 namespace apollo {
     enum class Key {
-        W, A, S, D,
-        L,
-        F11,
-        Up, Down, Left, Right,
-        Space, Esc, 
+        #define APOLLO_KEY(name, glfwKey) name,
+        #include <apollo/keys.def>
+        #undef APOLLO_KEY
         Unknown,
         Count
     };
