@@ -113,7 +113,7 @@ namespace apollo {
                 // so it's STREAMABLE and alt-tab friendly. Pacing is compositor's.
                 glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_FALSE);
                 glfwSetWindowMonitor(m_window, nullptr, 0, 0,
-                                     vid->width, vid->height, 0);
+                                     vid->width, vid->height + 1, 0);
                 break;
             }
         }
