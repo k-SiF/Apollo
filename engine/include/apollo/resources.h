@@ -14,6 +14,8 @@ namespace apollo {
             Resources& operator=(const Resources&) = delete;
 
             Texture* getTexture(const std::string& path);
+            
+            void preload(const std::vector<std::string>& paths);
 
         private:
             std::unordered_map<std::string, std::unique_ptr<Texture>> m_textures;
