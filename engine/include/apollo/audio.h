@@ -17,10 +17,18 @@ namespace apollo {
             void playMusic(const std::string& path, bool loop = true);
             void stopMusic();
 
+            // 0.0 = silent, 1.0 = full (can exceed 1 to amplify)
             void setMasterVolume(float volume);
+            void setSfxVolume(float volume);
+            void setMusicVolume(float volume);  
+
         private:
             ma_engine* m_engine = nullptr;
             ma_sound* m_music = nullptr;
             bool m_musicActive = false;
+
+            ma_sound* m_sfxGroup   = nullptr;
+            ma_sound* m_musicGroup = nullptr;
+
     };
 }
