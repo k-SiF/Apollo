@@ -106,6 +106,15 @@ namespace apollo {
         glUniform3f(location, vector.x, vector.y, vector.z);    
     }
 
+    void Shader::setVec4(const char* name, glm::vec4 vector) const {
+        int location = glGetUniformLocation(m_id, name);
+        if (location == -1) {
+            std::cout << "Uniform not found: " << name << std::endl;
+            return;
+        }
+        glUniform4f(location, vector.x, vector.y, vector.z, vector.w);    
+    }
+
     void Shader::setMat4(const char* name, const glm::mat4& matrix) const {
         int location = glGetUniformLocation(m_id, name);
         if (location == -1) {
