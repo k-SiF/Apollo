@@ -18,8 +18,13 @@ namespace apollo {
 
     void Entity::setTextureSize(Texture* tex, float size) {
         m_tex = tex;
+        if (!tex || tex->height() == 0) return;
         float aspect = (float)tex->width() / tex->height();
         m_scale = glm::vec2(aspect, 1.0f) * size;
+
+        if (!m_colSizeSet) {
+            m_colSize = glm::abs(m_scale);
+        }
     }
 
     glm::mat4 Entity::getModelMatrix(float alpha) const {
@@ -35,7 +40,7 @@ namespace apollo {
     }
 
     Collider Entity::getBoundsAt(glm::vec2 position) const {
-        glm::vec2 offset = glm::abs(m_scale) * 0.5f * m_colScale;
+        glm::vec2 offset = m_colSize * 0.5f; 
         return { position - offset, position + offset};
     }
 }

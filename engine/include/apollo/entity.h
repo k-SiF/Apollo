@@ -1,6 +1,7 @@
 #pragma once
 #include <apollo/mesh.h>
 #include <apollo/texture.h>
+#include <apollo/uvrect.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
 
@@ -30,9 +31,12 @@ namespace apollo {
             glm::vec2 getPosition() const { return m_position; }
             void setPosition(glm::vec2 position) { m_position = position; }
             glm::vec2 getScale() const { return m_scale; }
-            void setScale(glm::vec2 scale) { m_scale = scale; }
-            glm::vec2 getColScale() const { return m_colScale; }
-            void setColScale(glm::vec2 colScale) { m_colScale = colScale; }
+            void setScale(glm::vec2 scale) { 
+                m_scale = scale; 
+                if (!m_colSizeSet) m_colSize = glm::abs(scale); 
+            }
+            glm::vec2 getColSize() const { return m_colSize; }
+            void setColSize(glm::vec2 colSize) { m_colSize = colSize; m_colSizeSet = true; }
             float getRotation() const { return m_rotation; }
             void setRotation(float rotation) { 
                 if (rotation >= 360.0f || rotation <= -360.0f) rotation = 0.0f;
@@ -46,6 +50,10 @@ namespace apollo {
             void setTexture(Texture* tex) { m_tex = tex; }
             void setTextureSize(Texture* tex, float size);
 
+            // Sprite Sheet rendering helpers
+            const UVRect& getUVRect() const { return m_uvRect; }
+            void setUVRect(const UVRect& uv) { m_uvRect = uv; }
+
             Scene* getScene() const { return m_scene; }
             
             glm::vec2 getRenderPosition(float alpha) const {
@@ -57,13 +65,15 @@ namespace apollo {
             glm::vec2 m_position;
             glm::vec2 m_prevPosition;
             glm::vec2 m_scale = glm::vec2(1.0f);
-            glm::vec2 m_colScale = glm::vec2(1.0f);
+            glm::vec2 m_colSize = glm::vec2(1.0f);
+            bool m_colSizeSet = false;       
 
             float m_rotation = 0.0f;
             bool m_alive = true;
 
             Mesh* m_mesh = nullptr;
             Texture* m_tex = nullptr;
+            UVRect m_uvRect; 
             Scene* m_scene = nullptr;
             friend class Scene;
     }; 
