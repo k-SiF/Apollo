@@ -75,40 +75,63 @@ namespace apollo {
         glfwTerminate();
     }
 
-    void Window::setFullscreen(bool fullscreen) {
-        if (fullscreen && !m_fullscreen) {
-            // save current windowed pos/size before going fullscreen
+    void Window::setMode(WindowMode mode) {
+        if (mode == m_mode) return;
+ 
+        GLFWmonitor* monitor = glfwGetPrimaryMonitor();
+        const GLFWvidmode* vid = glfwGetVideoMode(monitor);
+ 
+        // If we're currently windowed, save geometry so we can restore it later.
+        if (m_mode == WindowMode::Windowed) {
             glfwGetWindowPos(m_window, &m_windowedX, &m_windowedY);
             glfwGetWindowSize(m_window, &m_windowedWidth, &m_windowedHeight);
-
-            GLFWmonitor* monitor = glfwGetPrimaryMonitor();
-            const GLFWvidmode* mode = glfwGetVideoMode(monitor);
-            glfwSetWindowMonitor(m_window, monitor, 0, 0,
-                                mode->width, mode->height, mode->refreshRate);
         }
-        else if (!fullscreen && m_fullscreen) {
-            // restore windowed pos/size
-            glfwSetWindowMonitor(m_window, NULL,
-                                m_windowedX, m_windowedY,
-                                m_windowedWidth, m_windowedHeight, 0);
+ 
+        switch (mode) {
+            case WindowMode::Windowed: {
+                // restore decorations and the saved windowed geometry
+                glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_TRUE);
+                glfwSetWindowMonitor(m_window, nullptr,
+                                     m_windowedX, m_windowedY,
+                                     m_windowedWidth, m_windowedHeight, 0);
+                break;
+            }
+ 
+            case WindowMode::Fullscreen: {
+                // EXCLUSIVE fullscreen: pass the monitor. Bypasses compositor.
+                // Smoothest, but screen-capture tools (Discord/OBS) can't grab it.
+                glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_TRUE);
+                glfwSetWindowMonitor(m_window, monitor, 0, 0,
+                                     vid->width, vid->height, vid->refreshRate);
+                break;
+            }
+ 
+            case WindowMode::Borderless: {
+                // BORDERLESS fullscreen: a windowed window (NULL monitor) with no
+                // decorations, sized to fill the screen. Still composited by DWM,
+                // so it's STREAMABLE and alt-tab friendly. Pacing is compositor's.
+                glfwSetWindowAttrib(m_window, GLFW_DECORATED, GLFW_FALSE);
+                glfwSetWindowMonitor(m_window, nullptr, 0, 0,
+                                     vid->width, vid->height, 0);
+                break;
+            }
         }
-        m_fullscreen = fullscreen;
+ 
+        m_mode = mode;
         applyVSync();
+    }
+
+    void Window::toggleFullscreen() {
+        switch (m_mode) {
+            case WindowMode::Windowed:   setMode(WindowMode::Fullscreen);  break;
+            case WindowMode::Fullscreen: setMode(WindowMode::Borderless);  break;
+            case WindowMode::Borderless: setMode(WindowMode::Windowed);    break;
+        }
     }
 
     void Window::clear(float r, float g, float b, float a) {
         glClearColor(r, g, b, a);
         glClear(GL_COLOR_BUFFER_BIT);
-    }
-
-    void Window::swapBuffers() {
-        glfwSwapBuffers(m_window);
-
-        #ifdef _WIN32
-            if (!m_fullscreen) {
-                DwmFlush();   // sync to compositor in windowed mode
-            }
-        #endif
     }
 
     void Window::pollEvents() {
@@ -142,9 +165,24 @@ namespace apollo {
 
     void Window::applyVSync() const {
         #ifdef _WIN32
-            glfwSwapInterval(m_fullscreen ? 1 : 0);
+            if (m_mode == WindowMode::Fullscreen) {
+                glfwSwapInterval(1);
+            } else {
+                glfwSwapInterval(0);
+            }
         #else
             glfwSwapInterval(1);
         #endif
     }
+
+    // ---- in swapBuffers(), the DwmFlush guard now covers BOTH windowed modes ----
+    void Window::swapBuffers() {
+        glfwSwapBuffers(m_window);
+    #ifdef _WIN32
+        if (m_mode != WindowMode::Fullscreen) {   // windowed OR borderless
+            DwmFlush();
+        }
+    #endif
+    }
+
 }

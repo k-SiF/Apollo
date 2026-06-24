@@ -2,6 +2,12 @@
 struct GLFWwindow;
 
 namespace apollo {
+    enum WindowMode {
+        Windowed,
+        Fullscreen,
+        Borderless
+    };
+
     class Window {
         public:
             Window(int width, int height, const char* title);
@@ -9,9 +15,9 @@ namespace apollo {
             Window(const Window&) = delete;
             Window& operator=(const Window&) = delete;
 
-            void setFullscreen(bool fullscreen);
+            void setMode(WindowMode mode);
             bool isFullscreen() const { return m_fullscreen; }
-            void toggleFullscreen() { setFullscreen(!m_fullscreen); }
+            void toggleFullscreen();
             void applyVSync() const;
 
             bool shouldClose() const;
@@ -27,6 +33,7 @@ namespace apollo {
 
         private:
             GLFWwindow* m_window = nullptr;
+            WindowMode m_mode;
             int m_windowedWidth = 800;
             int m_windowedHeight = 600;
             int m_windowedX = 100, m_windowedY = 100;
