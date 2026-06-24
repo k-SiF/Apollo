@@ -1,10 +1,12 @@
 #pragma once
+#include <apollo/image.h>
 #include <string>
 
 namespace apollo {
     class Texture {
         public:
             Texture(const std::string& filepath);
+            Texture(const DecodedImage& img); 
             ~Texture();
 
             Texture(const Texture&) = delete;               // no copying
