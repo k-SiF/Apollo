@@ -13,12 +13,15 @@ namespace apollo {
             virtual void update(float deltaTime) = 0;
             virtual void fixedUpdate(float deltaTime) {}
             virtual void onRender(float alpha) {}
+            virtual void drawUI() {} 
             void setBackground(float r, float g, float b) { m_bgR = r; m_bgG = g; m_bgB = b; } ;
             void setMode(WindowMode mode) { m_window.setMode(mode); }
             void toggleFullscreen() { m_window.toggleFullscreen(); }
+            void setMaxFPS(int fps) { m_targetFrameTime = (fps > 0) ? 1.0 / fps : 0.0; }
         
         private:
             Window m_window;
+            double m_targetFrameTime = 0.0;   // 0 = uncapped; else seconds/frame
             float m_bgR = 0.2f, m_bgG = 0.3f, m_bgB = 0.3f;
 
         protected:
