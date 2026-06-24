@@ -10,3 +10,5 @@
 #include <apollo/chrono.h>
 #include <apollo/texture.h>
 #include <apollo/camera.h>
+#include <apollo/resources.h>
+#include <apollo/animation.h>
