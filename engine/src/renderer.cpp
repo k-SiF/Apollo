@@ -40,6 +40,10 @@ namespace apollo {
     void Renderer::draw(Entity &entity, float alpha) {
         m_shader.use();
         m_shader.setMat4("uModel", entity.getModelMatrix(alpha));
+
+        const UVRect& uv = entity.getUVRect();
+        m_shader.setVec4("uUVRect", glm::vec4(uv.x, uv.y, uv.w, uv.h));
+
         if (entity.getTexture()) entity.getTexture()->bind(0);
         entity.getMesh()->draw();
 
