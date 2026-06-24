@@ -4,7 +4,7 @@
 namespace apollo {
     class Sketch {
         public:
-            Sketch();
+            Sketch(const WindowConfig& config = WindowConfig{});
             virtual ~Sketch() = default;
             void run();
 

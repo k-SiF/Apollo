@@ -5,7 +5,7 @@
 #include <iostream>
 
 namespace apollo {
-    Sketch::Sketch() : m_window(800, 600, "Apollo"), m_shader("shaders/triangle.glsl"){
+    Sketch::Sketch(const WindowConfig& config) : m_window(config), m_shader("shaders/triangle.glsl"){
 
     }
 
