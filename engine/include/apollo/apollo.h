@@ -13,3 +13,4 @@
 #include <apollo/resources.h>
 #include <apollo/animation.h>
 #include <apollo/audio.h>
+#include <apollo/font.h>
