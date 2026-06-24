@@ -31,7 +31,7 @@ namespace apollo {
         glViewport(0, 0, width, height);
     }
 
-    Window::Window(int width, int height, const char* title) {
+    Window::Window(const WindowConfig& config) {
         if (!glfwInit()) {
             std::cout << "Failed to initialise GLFW" << std::endl;
             return;
@@ -41,7 +41,7 @@ namespace apollo {
         glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
         glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
         
-        m_window = glfwCreateWindow(width, height, title, NULL, NULL);
+        m_window = glfwCreateWindow(config.width, config.height, config.title, NULL, NULL);
         if (m_window == NULL) {
             std::cout << "Failed to create GLFW window." << std::endl;
             glfwTerminate();
@@ -64,10 +64,11 @@ namespace apollo {
         glfwSetFramebufferSizeCallback(m_window, framebuffer_size_callback);
         glfwSetKeyCallback(m_window, keyCallback);
 
-        m_windowedWidth = width;
-        m_windowedHeight = height;
+        m_windowedWidth = config.width;
+        m_windowedHeight = config.height;
 
         applyVSync();
+        setMode(config.mode);
     }
 
     Window::~Window() {

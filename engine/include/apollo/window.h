@@ -8,9 +8,17 @@ namespace apollo {
         Borderless
     };
 
+    struct WindowConfig {
+        int width = 800;
+        int height = 600;
+        const char* title = "Apollo";
+        WindowMode mode = WindowMode::Windowed;   // start mode
+        bool vsync = true;
+    };
+
     class Window {
         public:
-            Window(int width, int height, const char* title);
+            Window(const WindowConfig& config);
             ~Window();
             Window(const Window&) = delete;
             Window& operator=(const Window&) = delete;
