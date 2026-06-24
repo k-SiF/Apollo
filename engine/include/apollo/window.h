@@ -14,6 +14,7 @@ namespace apollo {
         const char* title = "Apollo";
         WindowMode mode = WindowMode::Windowed;   // start mode
         bool vsync = true;
+        int maxFPS = 0; // 0 = uncapped
     };
 
     class Window {
@@ -41,7 +42,7 @@ namespace apollo {
 
         private:
             GLFWwindow* m_window = nullptr;
-            WindowMode m_mode;
+            WindowMode m_mode = WindowMode::Windowed;
             int m_windowedWidth = 800;
             int m_windowedHeight = 600;
             int m_windowedX = 100, m_windowedY = 100;
