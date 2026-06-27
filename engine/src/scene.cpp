@@ -1,6 +1,7 @@
 #include <apollo/scene.h>
 #include <apollo/renderer.h> 
 #include <apollo/chrono.h>
+#include <iostream>
 
 namespace apollo {
     Entity* Scene::addEntity(Mesh *mesh, glm::vec2 position) {
@@ -24,6 +25,7 @@ namespace apollo {
         }
 
         for (size_t i = 0; i < m_entities.size(); i++) {
+            if (!m_entities[i]->isCollidable()) continue;
             for (size_t j = i + 1; j < m_entities.size(); j++) {
                 Entity& a = *m_entities[i];
                 Entity& b = *m_entities[j];
@@ -49,7 +51,7 @@ namespace apollo {
 
     bool Scene::wouldCollide(const Collider& box, const Entity* ignore) const {
         for (auto& e : m_entities) {
-            if (e.get() == ignore) continue;
+            if (e.get() == ignore || !e->isCollidable()) continue;
             if (box.intersect(e->getBounds())) return true;
         }
         return false;
