@@ -1,5 +1,4 @@
 #include <apollo/entity.h>
-#include "entity.h"
 
 namespace apollo {
     Entity::Entity(Mesh *mesh, glm::vec2 position) : m_position(position), m_prevPosition(position) ,m_mesh(mesh) {
@@ -9,7 +8,7 @@ namespace apollo {
     }
 
     void Entity::update(float deltaTime) { 
-
+        updateAnimation(deltaTime);
     }
 
     void Entity::fixedUpdate(float deltaTime) {
@@ -27,6 +26,55 @@ namespace apollo {
         }
     }
 
+    void Entity::sizeToFrame(const Frame& f, float size) {
+        if (!f.texture || f.texture->height() == 0) return;
+
+        float cellW = f.uv.w * f.texture->width();
+        float cellH = f.uv.h * f.texture->height();
+        if (cellH == 0.0f) return;
+
+        float aspect = cellW / cellH;
+        m_scale = glm::vec2(aspect, 1.0f) * size;
+
+        if (!m_colSizeSet) {
+            m_colSize = glm::abs(m_scale);
+        }
+    }
+
+    
+    void Entity::addAnimation(const std::string& name, Animation anim, float scale) {
+        m_animations[name] = AnimEntry{ std::move(anim), scale };
+        
+        if (!m_currentAnim) {
+            play(name);
+            const Frame& f = m_animations[name].anim.currentFrame();
+            m_tex = f.texture;
+            setUVRect(f.uv);
+            sizeToFrame(f, m_currentScale);
+        }
+    }
+    
+    void Entity::play(const std::string& name) {
+        if (m_currentName == name) return;
+        auto it = m_animations.find(name);
+        if (it != m_animations.end()) {
+            m_currentAnim = &it->second.anim;
+            m_currentScale = it->second.scale;  
+            m_currentName = name;
+            m_currentAnim->reset();
+        }
+    }
+
+    void Entity::updateAnimation(float deltaTime) {
+        if (!m_currentAnim) return;
+        
+        m_currentAnim->update(deltaTime);
+        const Frame& f = m_currentAnim->currentFrame();
+        m_tex = f.texture;
+        setUVRect(f.uv);
+        sizeToFrame(f, m_currentScale); 
+    }
+
     glm::mat4 Entity::getModelMatrix(float alpha) const {
         glm::vec2 pos = m_prevPosition * (1.0f - alpha) + m_position * alpha;
         glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));// position
@@ -34,11 +82,11 @@ namespace apollo {
         model = glm::scale(model, glm::vec3(m_scale, 1.0f));          // scale
         return model;
     }
-
+    
     Collider Entity::getBounds() const {
         return getBoundsAt(m_position);
     }
-
+    
     Collider Entity::getBoundsAt(glm::vec2 position) const {
         glm::vec2 offset = m_colSize * 0.5f; 
         return { position - offset, position + offset};

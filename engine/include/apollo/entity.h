@@ -2,8 +2,11 @@
 #include <apollo/mesh.h>
 #include <apollo/texture.h>
 #include <apollo/uvrect.h>
+#include <apollo/animation.h>
+#include <apollo/audio.h>
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp> 
+#include <unordered_map>
 
 namespace apollo {
     class Scene;
@@ -24,6 +27,11 @@ namespace apollo {
             virtual void update(float deltaTime);
             virtual void fixedUpdate(float deltaTime);
             virtual void onCollision(Entity& other) {}
+            
+            void addAnimation(const std::string& name, Animation anim, float scale = 1.0f);
+            void play(const std::string& name); 
+            void updateAnimation(float deltaTime);
+            bool hasAnimation() const { return m_currentAnim != nullptr; }
 
             bool isAlive() const { return m_alive; }
             void destroy() { m_alive = false; }
@@ -42,6 +50,10 @@ namespace apollo {
                 if (rotation >= 360.0f || rotation <= -360.0f) rotation = 0.0f;
                 m_rotation = rotation;
             }
+
+            bool isCollidable() const { return m_collidable; }
+            void setCollidable(bool c) { m_collidable = c; }
+
             Collider getBounds() const;
             Collider getBoundsAt(glm::vec2 position) const;
             Mesh* getMesh() const { return m_mesh; }
@@ -67,6 +79,7 @@ namespace apollo {
             glm::vec2 m_scale = glm::vec2(1.0f);
             glm::vec2 m_colSize = glm::vec2(1.0f);
             bool m_colSizeSet = false;       
+            bool m_collidable = true;   
 
             float m_rotation = 0.0f;
             bool m_alive = true;
@@ -75,6 +88,20 @@ namespace apollo {
             Texture* m_tex = nullptr;
             UVRect m_uvRect; 
             Scene* m_scene = nullptr;
+            
+            struct AnimEntry {
+                Animation anim;
+                float scale = 1.0f;
+            };
+
+            std::unordered_map<std::string, AnimEntry> m_animations;
+            Animation* m_currentAnim = nullptr;
+            Audio* m_audio = nullptr;
+            float m_currentScale = 1.0f;
+            std::string m_currentName;
+
+            void sizeToFrame(const Frame& f, float scale);
+
             friend class Scene;
     }; 
 } 

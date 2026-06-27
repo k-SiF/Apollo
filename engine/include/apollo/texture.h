@@ -3,10 +3,16 @@
 #include <string>
 
 namespace apollo {
+
+    enum class TextureFilter {
+        Linear,
+        Nearest
+    };
+
     class Texture {
         public:
-            Texture(const std::string& filepath);
-            Texture(const DecodedImage& img); 
+            Texture(const std::string& filepath, TextureFilter filter = TextureFilter::Linear);
+            Texture(const DecodedImage& img, TextureFilter filter = TextureFilter::Linear); 
             ~Texture();
 
             Texture(const Texture&) = delete;               // no copying

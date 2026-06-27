@@ -13,7 +13,7 @@ namespace apollo {
             Resources(const Resources&) = delete;
             Resources& operator=(const Resources&) = delete;
 
-            Texture* getTexture(const std::string& path);
+            Texture* getTexture(const std::string& path, TextureFilter filter = TextureFilter::Linear);
             
             void preload(const std::vector<std::string>& paths);
 

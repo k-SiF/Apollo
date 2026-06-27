@@ -4,7 +4,7 @@
 #include <vector>
 
 namespace apollo {
-    Texture* Resources::getTexture(const std::string& path) {
+    Texture* Resources::getTexture(const std::string& path, TextureFilter filter) {
         // loaded
         auto t = m_textures.find(path);
         if (t != m_textures.end()) {
@@ -12,7 +12,7 @@ namespace apollo {
         }
 
         // not loaded
-        auto texture = std::make_unique<Texture>(path);
+        auto texture = std::make_unique<Texture>(path, filter);
         Texture* ptr = texture.get();
         m_textures[path] = std::move(texture);
         return ptr;

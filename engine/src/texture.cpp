@@ -6,24 +6,26 @@
 #include <iostream>
 
 namespace apollo {
-    static unsigned int uploadToGPU(unsigned char* data, int width, int height, int channels) {
+    static unsigned int uploadToGPU(unsigned char* data, int width, int height, int channels, TextureFilter filter) {
         unsigned int id;
         glGenTextures(1, &id);
         glBindTexture(GL_TEXTURE_2D, id);
 
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+        GLint glFilter = (filter == TextureFilter::Nearest) ? GL_NEAREST : GL_LINEAR;
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, glFilter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, glFilter);
 
         GLenum format = (channels == 4) ? GL_RGBA : GL_RGB;
         glTexImage2D(GL_TEXTURE_2D, 0, format, width, height, 0, format, GL_UNSIGNED_BYTE, data);
-        glGenerateMipmap(GL_TEXTURE_2D);
+        if (filter != TextureFilter::Nearest) glGenerateMipmap(GL_TEXTURE_2D);
         return id;
     }
 
     // single-threaded path: decode here, then upload
-    Texture::Texture(const std::string& filepath) {
+    Texture::Texture(const std::string& filepath, TextureFilter filter) {
         stbi_set_flip_vertically_on_load(true);
 
         int channels;
@@ -32,19 +34,19 @@ namespace apollo {
             std::cout << "Failed to load texture: " << filepath << std::endl;
             return;
         }
-        m_id = uploadToGPU(data, m_width, m_height, channels);
+        m_id = uploadToGPU(data, m_width, m_height, channels, filter);
         stbi_image_free(data); // GPU has a copy, free CPU pixels.
     }
 
     // parallel path: pixels already decoded on a worker thread, just upload
-    Texture::Texture(const DecodedImage& img) {
+    Texture::Texture(const DecodedImage& img, TextureFilter filter) {
         if (!img.ok || !img.pixels) {
             std::cout << "Failed to load texture: " << img.path << std::endl;
             return;
         }
         m_width = img.width;
         m_height = img.height;
-        m_id = uploadToGPU(img.pixels, img.width, img.height, img.channels);
+        m_id = uploadToGPU(img.pixels, img.width, img.height, img.channels, filter);
         // we don't free img.pixels here, the caller owns/frees the DecodedImage
     }
 

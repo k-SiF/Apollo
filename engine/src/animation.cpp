@@ -1,4 +1,5 @@
 #include <apollo/animation.h>
+#include <iostream>
 
 namespace apollo {
     Animation::Animation(std::vector<Frame> frames, float frameTime, bool loop) 
@@ -55,7 +56,10 @@ namespace apollo {
         float cw = 1.0f / static_cast<float>(cols); // cell width (UV)
         float ch = 1.0f / static_cast<float>(rows); // cell height (UV)
 
+        std::cout << "cw: " << cw << " ch: " << ch << std::endl;
+
         int total = (count < 0) ? cols * rows : count;
+        std::cout << "total: " << total << std::endl;
         frames.reserve(total);
 
         for (int i = 0; i < total; i++) {
@@ -63,6 +67,8 @@ namespace apollo {
             int row = i / cols;
             frames.push_back({sheet, UVRect{col * cw, row * ch, cw, ch}});
         }
+
+        std::cout << "No. frames: " << frames.size() << std::endl;
         
         return frames;
     }
