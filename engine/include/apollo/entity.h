@@ -66,6 +66,10 @@ namespace apollo {
             const UVRect& getUVRect() const { return m_uvRect; }
             void setUVRect(const UVRect& uv) { m_uvRect = uv; }
 
+            glm::vec2 getAnchor() const { return m_anchor; }
+            void setAnchor(glm::vec2 anchor) { m_anchor = anchor; }
+            void anchorBottom() { m_anchor = glm::vec2(0.0f, 0.5f); }
+
             Scene* getScene() const { return m_scene; }
             
             glm::vec2 getRenderPosition(float alpha) const {
@@ -77,6 +81,7 @@ namespace apollo {
             glm::vec2 m_position;
             glm::vec2 m_prevPosition;
             glm::vec2 m_scale = glm::vec2(1.0f);
+            glm::vec2 m_anchor = glm::vec2(0.0f); // centered anchor
             glm::vec2 m_colSize = glm::vec2(1.0f);
             bool m_colSizeSet = false;       
             bool m_collidable = true;   
