@@ -14,6 +14,7 @@ namespace apollo {
             virtual void fixedUpdate(float deltaTime) {}
             virtual void onRender(float alpha) {}
             virtual void drawUI() {} 
+            virtual void drawWorld(float alpha) {} // world space custom/debug draw call (after scene)
             void setBackground(float r, float g, float b) { m_bgR = r; m_bgG = g; m_bgB = b; } ;
             void setMode(WindowMode mode) { m_window.setMode(mode); }
             void toggleFullscreen() { m_window.toggleFullscreen(); }
