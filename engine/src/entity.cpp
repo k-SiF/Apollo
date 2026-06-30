@@ -77,9 +77,17 @@ namespace apollo {
 
     glm::mat4 Entity::getModelMatrix(float alpha) const {
         glm::vec2 pos = m_prevPosition * (1.0f - alpha) + m_position * alpha;
-        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f));// position
-        model = glm::rotate(model, glm::radians(m_rotation), glm::vec3(0,0,1)); // rotation (around z, for 2D)
-        model = glm::scale(model, glm::vec3(m_scale, 1.0f));          // scale
+        glm::mat4 model = glm::translate(glm::mat4(1.0f), glm::vec3(pos, 0.0f)); // position
+        model = glm::rotate(model, glm::radians(m_rotation), glm::vec3(0,0,1));  // rotation (around z, for 2D)
+        model = glm::scale(model, glm::vec3(m_scale, 1.0f));                     // scale
+
+        glm::vec2 a;
+
+        // This is to unify visual scale and collision scale
+        // m_scale varies too much in animations
+        a.x = (-m_anchor.x * m_colSize.x) / (m_scale.x != 0.0f ? m_scale.x : 1.0f);
+        a.y = ( m_anchor.y * m_colSize.y) / (m_scale.y != 0.0f ? m_scale.y : 1.0f);
+        model = glm::translate(model, glm::vec3(a, 0.0f)); // anchor (shift)
         return model;
     }
     
@@ -88,7 +96,10 @@ namespace apollo {
     }
     
     Collider Entity::getBoundsAt(glm::vec2 position) const {
-        glm::vec2 offset = m_colSize * 0.5f; 
-        return { position - offset, position + offset};
+        glm::vec2 offset = m_colSize * 0.5f;
+
+        glm::vec2 anchorShift = glm::vec2(-m_anchor.x, m_anchor.y) * m_colSize;
+        glm::vec2 center = position + anchorShift; 
+        return { center - offset, center + offset};
     }
 }
