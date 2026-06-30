@@ -91,7 +91,7 @@ namespace apollo {
         m_debugShader.use();
         m_debugShader.setMat4("uProjection", m_projection);
         m_debugShader.setMat4("uView", m_view);
-        m_debugShader.setVec3("uColor", color); // green
+        m_debugShader.setVec3("uColor", color); // green default
 
         glBindVertexArray(m_debugVAO);
         glBindBuffer(GL_ARRAY_BUFFER, m_debugVBO);
@@ -99,6 +99,24 @@ namespace apollo {
 
         glDrawArrays(GL_LINES, 0, 8);   // 8 vertices = 4 lines
         
+    }
+
+    void Renderer::drawDebugLine(glm::vec2 a, glm::vec2 b, glm::vec3 color) {
+        float verts[] = {
+            a.x, a.y, 0.0f,
+            b.x, b.y, 0.0f
+        };
+
+        m_debugShader.use();
+        m_debugShader.setMat4("uProjection", m_projection);
+        m_debugShader.setMat4("uView", m_view);
+        m_debugShader.setVec3("uColor", color); // red default
+
+        glBindVertexArray(m_debugVAO);
+        glBindBuffer(GL_ARRAY_BUFFER, m_debugVBO);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(verts), verts);
+
+        glDrawArrays(GL_LINES, 0, 2);   // 2 vertices = 1 line
     }
 
     void Renderer::beginText(int width, int height) {

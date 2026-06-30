@@ -17,6 +17,7 @@ namespace apollo {
             void draw(Entity& entity, float alpha);
             void drawText(const Font& font, const std::string& text, float x, float y, glm::vec3 color = glm::vec3(1.0f));
             void drawDebugBox(const Collider& box, glm::vec3 color = glm::vec3(0.0f, 1.0f, 0.0f));
+            void drawDebugLine(glm::vec2 a, glm::vec2 b, glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f));
 
             bool m_debugDraw = false;
             
