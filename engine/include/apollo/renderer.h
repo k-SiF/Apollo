@@ -3,6 +3,7 @@
 #include <apollo/entity.h>
 #include <apollo/camera.h>
 #include <apollo/font.h>
+#include <apollo/spritebatch.h>
 #include <glm/gtc/matrix_transform.hpp> 
 
 namespace apollo {
@@ -19,12 +20,19 @@ namespace apollo {
             void drawDebugBox(const Collider& box, glm::vec3 color = glm::vec3(0.0f, 1.0f, 0.0f));
             void drawDebugLine(glm::vec2 a, glm::vec2 b, glm::vec3 color = glm::vec3(1.0f, 0.0f, 0.0f));
 
+            void beginBatch();
+            void batchDraw(Entity& entity, float alpha);
+            void endBatch();
+            int batchDrawCalls() const { return m_batch.drawCallCount(); }
+
             bool m_debugDraw = false;
             
         private:
             Shader m_shader;
             Shader m_debugShader;
             Shader m_textShader;
+
+            SpriteBatch m_batch;
 
             glm::mat4 m_projection = glm::mat4(1.0f);
             glm::mat4 m_textProjection = glm::mat4(1.0f);

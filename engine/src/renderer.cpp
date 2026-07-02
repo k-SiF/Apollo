@@ -72,6 +72,33 @@ namespace apollo {
         // --------------------------
     }
 
+    void Renderer::beginBatch() {
+        m_batch.begin(m_projection * m_view);
+    }
+
+    void Renderer::batchDraw(Entity& entity, float alpha) {
+        Texture* tex = entity.getTexture();
+        if (!tex) return;
+
+        glm::vec2 pos = entity.getRenderPosition(alpha); // interpolated
+        glm::vec2 scale = entity.getScale();
+        glm::vec2 anchor = entity.getAnchor();
+        glm::vec2 colSize = entity.getColSize();
+
+        glm::vec2 center = pos + glm::vec2(-anchor.x, anchor.y) * colSize;
+        glm::vec2 size = glm::abs(scale);
+
+        UVRect uv = entity.getUVRect();
+        if (scale.x < 0.0f) { uv.x += uv.w; uv.w = -uv.w; }
+        if (scale.y < 0.0f) { uv.y += uv.h; uv.h = -uv.h; }
+
+        m_batch.draw(tex, center, size, uv, entity.getRotation(), glm::vec4(1.0f));
+    }
+
+    void Renderer::endBatch() {
+        m_batch.end();
+    }
+
     void Renderer::drawDebugBox(const Collider& box, glm::vec3 color) {
         glm::vec2 min = box.min;
         glm::vec2 max = box.max;
