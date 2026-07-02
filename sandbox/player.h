@@ -1,6 +1,7 @@
 #pragma once
-#include <apollo/entity.h>
-#include <apollo/texture.h>
+#include <apollo/apollo.h>
+#include <unordered_map>
+#include <string>
 
 using namespace apollo;
 
@@ -10,6 +11,8 @@ class Player : public Entity {
         void update(float deltaTime) override;
         void fixedUpdate(float deltaTime) override;
         void onCollision(Entity& other) override;
+
+        void setAudio(Audio* audio) { m_audio = audio; }
 
         bool m_canMove = true;
     
@@ -24,9 +27,11 @@ class Player : public Entity {
         const float G = -9.81;
         
         bool m_jump = false;
+        bool m_moving = false;
+        int m_facing = 1; 
         
         glm::vec2 m_velocity = glm::vec2(SPEED, JUMP_FORCE);
         glm::vec2 m_prevPos = glm::vec2(0.0f);
-
+        
         Texture* m_texture = nullptr;
 };

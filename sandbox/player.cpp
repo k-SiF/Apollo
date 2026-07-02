@@ -5,13 +5,29 @@
 #include <apollo/key.h>
 #include <iostream>
 
-Player::Player(Mesh* mesh, glm::vec2 position) : Entity(mesh, position) {
-    setTextureSize(&tex, 0.7f);
-    setTexture(&tex);
+Player::Player(Mesh* mesh, Texture* texture, glm::vec2 position) : Entity(mesh, position), m_texture(texture) {
+    setTextureSize(m_texture, 0.7f);
+    setTexture(m_texture);
+
+    setColSize(glm::vec2(0.12f, 0.3f));
 }
 
 void Player::update(float deltaTime) {
     if (Input::wasKeyPressed(Key::Space))  m_jump = true;
+
+    if (m_moving) play("run");
+    else play("idle");
+
+    if (m_currentAnim) {
+        m_currentAnim->update(deltaTime);
+        const Frame& f = m_currentAnim->currentFrame();
+        setTextureSize(f.texture, 0.7f * m_currentScale);
+        glm::vec2 s = getScale();
+        s.x = std::abs(s.x) * m_facing;
+        setScale(s);
+
+        setUVRect(f.uv);
+    }
 }
 
 void Player::fixedUpdate(float deltaTime) {
@@ -31,14 +47,13 @@ void Player::onCollision(Entity& other) {
 
 void Player::handleInput(float deltaTime) {
     glm::vec2 pos = getPosition();
-    glm::vec2 scale = getScale();
-    setColScale(glm::vec2(0.1f, 0.45f));
     float r = getRotation();
 
     // --- horizontal input ---
     float moveX = 0.0f;
-    if (Input::onKeyPress(Key::Left))  { moveX = -SPEED; flip(scale, -1); }
-    if (Input::onKeyPress(Key::Right)) { moveX =  SPEED; flip(scale,  1); }
+    m_moving = false;
+    if (Input::onKeyPress(Key::Left))  { moveX = -SPEED;  m_facing = -1; m_moving = true; }
+    if (Input::onKeyPress(Key::Right)) { moveX =  SPEED;  m_facing = 1; m_moving = true; }
 
     // --- jump ---
     if (m_jump) {
@@ -61,7 +76,7 @@ void Player::handleInput(float deltaTime) {
         m_velocity.y = 0.0f;
     }
 
-    // ground floor (optional, if you still want a hard floor)
+    // ground
     if (pos.y < -0.5f) { pos.y = -0.5f; m_velocity.y = 0.0f; }
 
     // rotation
@@ -69,14 +84,16 @@ void Player::handleInput(float deltaTime) {
     if (Input::onKeyPress(Key::D)) r -= 90.0f * deltaTime;
     if (Input::onKeyPress(Key::S)) r = 0.0f;
 
+    if (Input::wasKeyPressed(Key::M)) play("effect");
+
     if (m_canMove) setPosition(pos);
-    setScale(scale);
     setRotation(r);
 }
 
 void Player::jump(float y) {
     if (y <= -0.5f) {
         m_velocity.y = JUMP_FORCE;
+        if (m_audio) m_audio->playSound("assets/sfx/jump.wav");
     }
 }
 
