@@ -54,6 +54,16 @@ namespace apollo {
             bool isCollidable() const { return m_collidable; }
             void setCollidable(bool c) { m_collidable = c; }
 
+            // Higher layer draws on top
+            // orderInLayer separates within a layer
+            // ySort auto-orders by world Y
+            int getSortLayer() const { return m_sortLayer; }
+            void setSortLayer(int layer) { m_sortLayer = layer; }
+            int getOrderInLayer() const { return m_orderInLayer; }
+            void setOrderInLayer(int order) { m_orderInLayer = order; }
+            bool ySort() const { return m_ySort; }
+            void setYSort(bool enabled) { m_ySort = enabled; }
+
             Collider getBounds() const;
             Collider getBoundsAt(glm::vec2 position) const;
             Mesh* getMesh() const { return m_mesh; }
@@ -83,8 +93,12 @@ namespace apollo {
             glm::vec2 m_scale = glm::vec2(1.0f);
             glm::vec2 m_anchor = glm::vec2(0.0f); // centered anchor
             glm::vec2 m_colSize = glm::vec2(1.0f);
-            bool m_colSizeSet = false;       
-            bool m_collidable = true;   
+            bool m_colSizeSet = false;
+            bool m_collidable = true;
+
+            int m_sortLayer = 0;
+            int m_orderInLayer = 0;
+            bool m_ySort = false;
 
             float m_rotation = 0.0f;
             bool m_alive = true;
