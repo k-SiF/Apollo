@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <unordered_map>
 #include <glm/gtc/matrix_transform.hpp> 
 
 namespace apollo {
@@ -22,5 +23,7 @@ namespace apollo {
 
         private:
             unsigned int m_id = 0;
+            mutable std::unordered_map<std::string, int> m_uniformCache;
+            int getLocation(const char* name) const;
     };
 }

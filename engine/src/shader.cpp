@@ -35,10 +35,10 @@ namespace apollo {
         glLinkProgram(m_id);
 
         int success;
-        glGetProgramiv(m_id, GL_COMPILE_STATUS, &success);
+        glGetProgramiv(m_id, GL_LINK_STATUS, &success);
         if (!success) {
             char log[512];
-            glGetProgramInfoLog(m_id, 521, nullptr, log);
+            glGetProgramInfoLog(m_id, 512, nullptr, log);
             std::cout << "Program link error: " << log << std::endl;
         }
 
@@ -79,48 +79,47 @@ namespace apollo {
         glUseProgram(m_id);
     }
 
-    void Shader::setInt(const char* name, int value) const {
-        int loc = glGetUniformLocation(m_id, name);
-        if (loc == -1) { 
-            std::cout << "Uniform not found: " << name << std::endl;
-            return;
+    int Shader::getLocation(const char* name) const {
+        auto it = m_uniformCache.find(name);
+        if (it != m_uniformCache.end()) return it->second;
+
+        // First case, add to cache map
+        int location = glGetUniformLocation(m_id, name);
+        m_uniformCache[name] = location;
+
+        if (location == -1) {
+            std::cout << "Uniform not found (or unused): " << name << std::endl;
         }
-        glUniform1i(loc, value);
+        return location;
+    }
+
+    void Shader::setInt(const char* name, int value) const {
+        int location = getLocation(name);
+        if (location == -1) return;
+        glUniform1i(location, value);
     }
 
     void Shader::setVec2(const char* name, glm::vec2 vector) const {
-        int location = glGetUniformLocation(m_id, name);
-        if (location == -1) {
-            std::cout << "Uniform not found: " << name << std::endl;
-            return;
-        }
+        int location = getLocation(name);
+        if (location == -1) return;
         glUniform2f(location, vector.x, vector.y);    
     }
 
     void Shader::setVec3(const char* name, glm::vec3 vector) const {
-        int location = glGetUniformLocation(m_id, name);
-        if (location == -1) {
-            std::cout << "Uniform not found: " << name << std::endl;
-            return;
-        }
+        int location = getLocation(name);
+        if (location == -1) return;
         glUniform3f(location, vector.x, vector.y, vector.z);    
     }
 
     void Shader::setVec4(const char* name, glm::vec4 vector) const {
-        int location = glGetUniformLocation(m_id, name);
-        if (location == -1) {
-            std::cout << "Uniform not found: " << name << std::endl;
-            return;
-        }
+        int location = getLocation(name);
+        if (location == -1) return;
         glUniform4f(location, vector.x, vector.y, vector.z, vector.w);    
     }
 
     void Shader::setMat4(const char* name, const glm::mat4& matrix) const {
-        int location = glGetUniformLocation(m_id, name);
-        if (location == -1) {
-            std::cout << "Uniform not found: " << name << std::endl;
-            return;
-        }
+        int location = getLocation(name);
+        if (location == -1) return;
         glUniformMatrix4fv(location, 1, GL_FALSE, &matrix[0][0]);
     }
 }
