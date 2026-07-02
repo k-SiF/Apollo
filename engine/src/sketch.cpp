@@ -53,7 +53,7 @@ namespace apollo {
             onRender(alpha);
 
             // RENDER commands
-            m_renderer.clear(m_bgR, m_bgG, m_bgR, 1.0f); // clear buffer, replace values.
+            m_renderer.clear(m_bgR, m_bgG, m_bgB, 1.0f); // clear buffer, replace values.
             m_renderer.begin(m_window.getWidth(), m_window.getHeight(), m_camera);
             m_scene.draw(m_renderer, alpha);
             drawWorld(alpha);
