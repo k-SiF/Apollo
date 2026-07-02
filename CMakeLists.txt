@@ -35,11 +35,16 @@ add_library(apollo_engine
     engine/src/chrono.cpp
     engine/src/texture.cpp
     engine/src/camera.cpp
-    engine/src/resources.cpp)
+    engine/src/resources.cpp
+    engine/src/animation.cpp
+    engine/src/image.cpp
+    engine/src/audio.cpp
+    engine/src/font.cpp
+    engine/src/spritebatch.cpp)
 
 target_include_directories(apollo_engine
     PUBLIC engine/include           # users see headers under here
-    PRIVATE engine/include/apollo thirdparty/stb)  # engine's own .cpp can use short includes
+    PRIVATE engine/include/apollo thirdparty/stb thirdparty/miniaudio)  # engine's own .cpp can use short includes
 
 target_link_libraries(apollo_engine PRIVATE glfw glad)
 target_link_libraries(apollo_engine PUBLIC glm)
@@ -57,3 +62,6 @@ add_custom_command(TARGET sandbox POST_BUILD
 add_custom_command(TARGET sandbox POST_BUILD
     COMMAND ${CMAKE_COMMAND} -E copy_directory
     ${CMAKE_SOURCE_DIR}/sandbox/assets $<TARGET_FILE_DIR:sandbox>/assets)
+
+find_package(Threads REQUIRED)
+target_link_libraries(apollo_engine PRIVATE Threads::Threads)
