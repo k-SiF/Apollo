@@ -1,6 +1,7 @@
 #include <apollo/scene.h>
-#include <apollo/renderer.h> 
+#include <apollo/renderer.h>
 #include <apollo/chrono.h>
+#include <algorithm>
 #include <iostream>
 
 namespace apollo {
@@ -43,9 +44,32 @@ namespace apollo {
     }
 
     void Scene::draw(Renderer& renderer, float alpha) {
+        // Build the frame's draw list. y is only meaningful for ySort entities;
+        // others get 0 so stable_sort keeps their insertion order within a layer.
+        m_drawList.clear();
         for (auto& e : m_entities) {
-            renderer.draw(*e, alpha);
-            if (renderer.m_debugDraw) renderer.drawDebugBox(e->getBounds());
+            if (!e->getTexture()) continue;
+            float y = e->ySort() ? e->getRenderPosition(alpha).y : 0.0f;
+            m_drawList.push_back({ e.get(), e->getSortLayer(), e->getOrderInLayer(), y });
+        }
+
+        std::stable_sort(m_drawList.begin(), m_drawList.end(),
+            [](const DrawItem& a, const DrawItem& b) {
+                if (a.layer != b.layer) return a.layer < b.layer;
+                if (a.order != b.order) return a.order < b.order;
+                return a.y > b.y; // larger y = further back (drawn first); smaller y ends up on top
+            });
+
+        renderer.beginBatch();
+        for (auto& d : m_drawList) {
+            renderer.batchDraw(*d.entity, alpha);
+        }
+        renderer.endBatch();
+
+        if (renderer.m_debugDraw) {
+            for (auto& e : m_entities) {
+                renderer.drawDebugBox(e->getBounds());
+            }
         }
     }
 

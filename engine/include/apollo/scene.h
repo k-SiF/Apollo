@@ -24,6 +24,12 @@ namespace apollo {
             bool wouldCollide(const Collider& box, const Entity* ignore) const;
         
         private:
+            struct DrawItem { 
+                Entity* entity; 
+                int layer, order; 
+                float y; 
+            };
+            std::vector<DrawItem> m_drawList;
             std::vector<std::unique_ptr<Entity>> m_entities;
     };
 }
